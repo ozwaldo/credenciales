@@ -13,6 +13,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\Section;
 
 class VisitanteResource extends Resource
 {
@@ -24,46 +25,73 @@ class VisitanteResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('user.name')
-                    ->required()
-                    ->maxLength(255)
-                    ->label('Nombre'),
-                Forms\Components\TextInput::make('user.apellido_paterno')
-                    ->required()
-                    ->maxLength(255)
-                    ->label('Apellido Paterno'),
-                Forms\Components\TextInput::make('user.apellido_materno')
-                    ->required()
-                    ->maxLength(255)
-                    ->label('Apellido Materno'),
-                Forms\Components\Select::make('user.genero')
-                    ->required()
-                    ->options([
-                        'M' => 'Masculino',
-                        'F' => 'Femenino',
-                        'O' => 'Otro',
-                    ])
-                    ->label('Género'),
-                Forms\Components\TextInput::make('user.email')
-                    ->required()
-                    ->email()
-                    ->maxLength(255)
-                    ->label('Correo Electrónico'),
-                Forms\Components\TextInput::make('user.password')
-                    ->password()
-                    ->label('Contraseña')
-                    ->dehydrated(fn ($state) => filled($state)) // Se guarda solamente cuando se cambia la contraseña
-                    ->required(fn(string $context):bool => $context === 'create'), // Requerido solo al crear un nuevo usuario
-                Forms\Components\TextInput::make('institucion_origen')
-                    ->required()
-                    ->maxLength(255)
-                    ->label('Institución de Origen'),
-                Forms\Components\FileUpload::make('user.ruta_foto_perfil')
-                    ->label('Foto de Perfil')
-                    ->image()
-                    ->disk('public')
-                    ->directory('profile_photos')
-                    ->nullable(),
+                Section::make('Datos Personales')
+                    ->icon('heroicon-o-user')
+                    ->columns(2) // Dos columnas
+                    ->schema([
+                        Forms\Components\TextInput::make('user.name')
+                            ->required()
+                            ->maxLength(255)
+                            ->label('Nombre'),
+                        Forms\Components\TextInput::make('user.apellido_paterno')
+                            ->required()
+                            ->maxLength(255)
+                            ->label('Apellido Paterno'),
+                        Forms\Components\TextInput::make('user.apellido_materno')
+                            ->required()
+                            ->maxLength(255)
+                            ->label('Apellido Materno'),
+                        Forms\Components\Select::make('user.genero')
+                            ->required()
+                            ->options([
+                                'M' => 'Mujer',
+                                'H' => 'Hombre',
+                                'O' => 'Otro',
+                            ])
+                            ->label('Género'),
+                    ]),
+                Section::make('Información Institucional')
+                    ->icon('heroicon-o-academic-cap')
+                    ->schema([
+                        Forms\Components\TextInput::make('institucion_origen')
+                            ->required()
+                            ->maxLength(255)
+                            ->label('Institución de Origen'),
+                    ]),
+                Section::make('Foto de Perfil')
+                    ->schema([
+                        Forms\Components\FileUpload::make('user.ruta_foto_perfil')
+                            ->label('Foto de Perfil')
+                            ->image()
+                            ->disk('public')
+                            ->directory('profile_photos_visitantes')
+                            ->imageEditor() // Permite editar la imagen
+                            ->nullable(),
+                    ]),
+                Section::make('Información de la Cuenta')
+                    ->icon('heroicon-o-lock-closed')
+                    ->columns(2)
+                    ->schema([
+                        Forms\Components\TextInput::make('user.email')
+                            ->required()
+                            ->email()
+                            ->maxLength(255)
+                            ->label('Correo Electrónico'),
+                        Forms\Components\TextInput::make('user.password')
+                            ->password()
+                            ->label('Contraseña')
+                            ->dehydrated(fn($state) => filled($state))
+                            ->required(fn(string $context): bool => $context === 'create'),
+                    ]),
+                Section::make('Estado')
+                    ->schema([
+                        Forms\Components\Toggle::make('user.is_active')
+                            ->required()
+                            ->onColor('success')
+                            ->offColor('danger')
+                            ->inline(true)
+                            ->label('Activo'),
+                    ]),
             ]);
     }
 
@@ -71,7 +99,7 @@ class VisitanteResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('user.profile_photo_path')
+                ImageColumn::make('user.ruta_foto_perfil')
                     ->label('Foto')
                     ->disk('public')
                     ->circular(),
@@ -83,14 +111,20 @@ class VisitanteResource extends Resource
                 Tables\Columns\IconColumn::make('user.is_active')
                     ->label('Activo')
                     ->boolean(),
+                Tables\Columns\TextColumn::make('user.genero')->searchable()->sortable()->label('Género')
+                    ->formatStateUsing(fn($state) => match ($state) {
+                        'M' => 'Mujer',
+                        'H' => 'Hombre',
+                        'O' => 'Otro',
+                    }),
                 Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -116,5 +150,9 @@ class VisitanteResource extends Resource
             'create' => Pages\CreateVisitante::route('/create'),
             'edit' => Pages\EditVisitante::route('/{record}/edit'),
         ];
+    }
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with('user');
     }
 }

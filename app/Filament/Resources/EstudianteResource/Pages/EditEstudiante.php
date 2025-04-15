@@ -26,7 +26,11 @@ class EditEstudiante extends EditRecord
         $user = $record->user;
 
         // 1. Actualizar datos del perfil del estudiante
-        $profileData = Arr::only($data, ['numero_control', 'carrera', 'semestre']);
+        $profileData = Arr::only($data, [
+            'numero_control',
+            'carrera',
+            'semestre'
+        ]);
         $record->update($profileData);
 
         // 2. Actualizar datos del usuario asociado al perfil del estudiante
@@ -37,6 +41,7 @@ class EditEstudiante extends EditRecord
             'genero' => $data['user']['genero'],
             'email' => $data['user']['email'],
             'is_active' => $data['user']['is_active'],
+            'ruta_foto_perfil' => $data['user']['ruta_foto_perfil'] ?? $user->ruta_foto_perfil,
         ];
 
         // 3. Actualizar la contraseña si se proporciona una nueva
