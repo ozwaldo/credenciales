@@ -6,9 +6,14 @@ use App\Filament\Resources\EventoResource\Pages;
 use App\Filament\Resources\EventoResource\RelationManagers;
 use App\Models\Evento;
 use Filament\Forms;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -23,16 +28,26 @@ class EventoResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nombre')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('descripcion')
-                    ->maxLength(65535)
-                    ->columnSpanFull(),
-                Forms\Components\DateTimePicker::make('fecha_evento')
-                    ->required(),
-                Forms\Components\TextInput::make('lugar')
-                    ->maxLength(255),
+                Section::make('Registro de Evento')
+                    ->icon('heroicon-m-calendar-days')
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('nombre')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('dpto_organizador')
+                            ->required()
+                            ->maxLength(255)
+                            ->label('Departamento Organizador'),
+                        DateTimePicker::make('fecha_evento')
+                            ->required(),
+                        TextInput::make('lugar')
+                            ->maxLength(255),
+                        Textarea::make('descripcion')
+                            ->maxLength(65535)
+                            ->columnSpanFull(),
+
+                    ]),
             ]);
     }
 
@@ -40,18 +55,24 @@ class EventoResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nombre')
+                TextColumn::make('nombre')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('fecha_evento')
+                TextColumn::make('fecha_evento')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('lugar')
+                TextColumn::make('dpto_organizador')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('lugar')
+                    ->searchable(),
+                TextColumn::make('descripcion')
+                    ->limit(50)
+                    ->searchable()
+                    ->toggleable(),
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -71,14 +92,14 @@ class EventoResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -86,5 +107,5 @@ class EventoResource extends Resource
             'create' => Pages\CreateEvento::route('/create'),
             'edit' => Pages\EditEvento::route('/{record}/edit'),
         ];
-    }    
+    }
 }

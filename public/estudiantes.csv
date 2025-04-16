@@ -1,0 +1,16 @@
+name,apellido_paterno,apellido_materno,genero,email,numero_control,carrera,semestre
+Maria,Garcia,Lopez,M,maria.gl@mitecnologico.edu.mx,24TE0101,isc,3
+Juan,Perez,Rodriguez,H,juan.pr@mitecnologico.edu.mx,24TE0102,"ii",5
+Ana,Martinez,Hernandez,M,ana.mh@mitecnologico.edu.mx,24TE0103,"ige",1
+Carlos,Sanchez,Ramirez,H,carlos.sr@mitecnologico.edu.mx,24TE0104,"isc",7
+Sofia,Gonzalez,Flores,M,sofia.gf@mitecnologico.edu.mx,24TE0105,"ie",2
+Luis,Flores,Gomez,H,luis.fg@mitecnologico.edu.mx,24TE0106,"gas",4
+Elena,Torres,Cruz,M,elena.tc@mitecnologico.edu.mx,24TE0107,"isa",6
+Javier,Reyes,Diaz,H,javier.rd@mitecnologico.edu.mx,24TE0108,"ii",8
+Laura,Mendoza,Ortiz,M,laura.mo@mitecnologico.edu.mx,24TE0109,"ia",1
+Pedro,Jimenez,Silva,H,pedro.js@mitecnologico.edu.mx,24TE0110,"is",3
+Valeria,Ruiz,Morales,M,valeria.rm@mitecnologico.edu.mx,24TE0111,"isc",5
+Diego,Castro,Herrera,H,diego.ch@mitecnologico.edu.mx,24TE0112,"ige",2
+Fernanda,Vargas,Romero,M,fernanda.vr@mitecnologico.edu.mx,24TE0113,"gas",6
+Ricardo,Ortiz,Guzman,H,ricardo.og@mitecnologico.edu.mx,24TE0114,"ii",4
+Camila,Guzman,Nuñez,M,camila.gn@mitecnologico.edu.mx,24TE0115,"ie",1

@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Estudiante;
+use Illuminate\Support\Facades\Storage;
 
 class EstudianteObserver
 {
@@ -28,6 +29,11 @@ class EstudianteObserver
     public function deleted(Estudiante $estudiante): void
     {
         if ($estudiante->user) {
+            // Eliminar la foto de perfil si existe
+            if ($estudiante->user->ruta_foto_perfil) {
+                Storage::disk('public')->delete($estudiante->user->ruta_foto_perfil);
+            }
+            // Eliminar el usuario asociado al estudiante
             $estudiante->user->delete();
         }
     }

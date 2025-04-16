@@ -192,6 +192,7 @@ class EstudianteResource extends Resource
             'edit' => Pages\EditEstudiante::route('/{record}/edit'),
         ];
     }
+
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()->with('user');
