@@ -14,12 +14,17 @@ use Illuminate\Support\Str;
  */
 class QrCodeService // <-- Define la clase
 {
-    const QR_CODE_INTERVAL = 300; // 5 minutos
+    const QR_CODE_INTERVAL = 300;
 
     // Genera el contenido json para un codigo QR seguro
     protected function generatePayload(User $user): string|null
     {
-        if ($user->qr_secret) {
+        // Log::debug('QrCodeService@generatePayload: Method entered.', ['user_id' => $user->id]);
+
+        if (!$user->qr_secret) {
+
+            // Log::error('QrCodeService@generatePayload: User is missing qr_secret.', ['user_id' => $user->id]);
+
             $user->update(['qr_secret' => Str::random(32)]);
             return null;
         }

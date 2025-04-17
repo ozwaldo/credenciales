@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\CredentialController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QrCodeController;
-//use App\Http\Controllers\;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,8 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Ruta para mostrar la página de la credencial del usuario
     // Cuando el usuario visite /mi-credencial, se ejecutará el método 'show' de CredentialController
-
-    //Route::get('/mi-credencial', [\App\Http\Controllers\CredentialController::class, 'show'])->name('credential.show');
+    Route::get('/mi-credencial', [CredentialController::class, 'show'])->name('credential.show');
 
     // Ruta para generar y mostrar la imagen del código QR del usuario
     // Cuando la etiqueta <img> en la vista de credencial pida esta URL,
