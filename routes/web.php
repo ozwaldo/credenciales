@@ -3,6 +3,7 @@
 use App\Http\Controllers\CredentialController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QrCodeController;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,8 +17,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Route::get('/', function (Request $request) {
+//     $user = $request->user(); // Obtener el usuario autenticado
+//     return view('credential.show', ['user' => $user]);
+//     // return view('welcome');
+// });
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/login');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

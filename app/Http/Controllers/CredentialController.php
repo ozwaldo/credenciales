@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 /**
  * Controlador para manejar la visualización de la credencial del usuario.
@@ -18,12 +19,14 @@ class CredentialController extends Controller
      */
     public function show(Request $request)
     {
-        $user = $request->user(); // Obtener el usuario autenticado
+        $user = $request->user()->loadMissing(['estudiante', 'visitante']); // Obtener el usuario autenticado
 
         // Verificar si el usuario está autenticado y tiene el rol adecuado
         if (!$user->is_active) {
             Auth::logout(); // Cerrar sesión del usuario
-            return redirect('/login')->with('status', 'Tu cuenta ha sido desactivada. Por favor, contacta al administrador.');
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return Redirect::route('login')->withErrors(['login_error' => __('Tu cuenta ha sido desactivada. Por favor, contacta al administrador.')]);
         }
 
         // Verificar si el usuario tiene el rol de estudiante o visitante
