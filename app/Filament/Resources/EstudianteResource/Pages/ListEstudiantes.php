@@ -10,6 +10,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
@@ -127,6 +128,7 @@ class ListEstudiantes extends ListRecords
                             ->send();
                     }
                 })
+                ->visible(fn(): bool => Auth::user()->can('manage estudiantes'))
         ];
     }
 }

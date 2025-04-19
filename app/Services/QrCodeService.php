@@ -19,14 +19,10 @@ class QrCodeService // <-- Define la clase
     // Genera el contenido json para un codigo QR seguro
     protected function generatePayload(User $user): string|null
     {
-        // Log::debug('QrCodeService@generatePayload: Method entered.', ['user_id' => $user->id]);
-
         if (!$user->qr_secret) {
 
-            // Log::error('QrCodeService@generatePayload: User is missing qr_secret.', ['user_id' => $user->id]);
-
             $user->update(['qr_secret' => Str::random(32)]);
-            return null;
+            // return null;
         }
 
         $identifier = null;
@@ -67,10 +63,15 @@ class QrCodeService // <-- Define la clase
         // Generar el código QR usando la librería SimpleSoftwareIO\QrCode
         $qrCode = QrCode::format('svg')
             ->size(250)
-            ->errorCorrection('L')
+            ->errorCorrection('H')
             ->generate($payload);
 
-        return $qrCode;
+
+        // Aññadir logo al centro del QR
+        $logoPath = public_path('images/logoitsur.png'); // Cambia la ruta al logo según tu estructura de carpetas
+        $svgWithLogo = $this->addLogoToSvg($qrCode, $logoPath, 75); // 50px de ancho;
+
+        return $svgWithLogo;
     }
 
     // Verifica el código QR recibido
@@ -182,6 +183,33 @@ class QrCodeService // <-- Define la clase
         }
 
         return $data;
+    }
+
+    // Añadir un logo al SVG del código QR
+    private function addLogoToSvg(string $svg, string $logoPath, int $logoWith): string
+    {
+        // Cargar el contenido del logo en base64
+        $logoData = base64_encode(file_get_contents($logoPath));
+        $logoMime = mime_content_type($logoPath);
+        $logoBase64 = "data:$logoMime;base64,$logoData";
+
+        // Calcular posición central
+        $svgXML = simplexml_load_string($svg);
+        $viewBox = explode(' ', (string)$svgXML['viewBox']);
+        $qrWidth = (float) $viewBox[2];
+        $qrHeight = (float) $viewBox[3];
+        $logoX = ($qrWidth - $logoWith) / 2;
+        $logoY = ($qrHeight - $logoWith) / 2;
+
+        // Crear el elemento <image> para el logo
+        $imagen = $svgXML->addChild('image');
+        $imagen->addAttribute('x', $logoX);
+        $imagen->addAttribute('y', $logoY);
+        $imagen->addAttribute('width', $logoWith);
+        $imagen->addAttribute('height', $logoWith);
+        $imagen->addAttribute('href', $logoBase64);
+
+        return $svgXML->asXML();
     }
 
 } // Fin de la clase

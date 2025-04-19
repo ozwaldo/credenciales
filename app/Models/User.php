@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -62,5 +63,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function visitante()
     {
         return $this->hasOne(Visitante::class);
+    }
+
+    public function canAccessAdminPanel(Panel $panel): bool
+    {
+        // Permitir acceso al panel de administración solo si el usuario tiene el rol de administrador o verificador
+        return $this->hasRole(['admin', 'verificador']) && $panel->getId() === 'admin';
     }
 }

@@ -15,6 +15,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Section;
+use Illuminate\Support\Facades\Auth;
 
 class EstudianteResource extends Resource
 {
@@ -193,8 +194,23 @@ class EstudianteResource extends Resource
         ];
     }
 
+    public static function canViewAny(): bool
+    {
+        $user = Auth::user();
+        return $user && $user->can('manage estudiantes');
+    }
+
+    public static function canCreate(): bool
+    {
+        $user = Auth::user();
+        return $user && $user->can('manage estudiantes');
+    }
+
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()->with('user');
     }
+
+
+
 }

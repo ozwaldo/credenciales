@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CredentialController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\QrCodeController;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,11 @@ use Illuminate\Support\Facades\Route;
 // });
 Route::get('/', function () {
     return redirect('/login');
+});
+
+Route::middleware(['auth', 'can:verify credenciales'])->group(function () {
+    Route::get('/verificar', [VerificationController::class, 'showScanner'])->name('vericiacion.scanner');
+    Route::post('/verificar/revisar', [VerificationController::class, 'VerificarPayload'])->name('verificacion.revisar');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

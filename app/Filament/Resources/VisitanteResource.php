@@ -14,6 +14,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Section;
+use Illuminate\Support\Facades\Auth;
 
 class VisitanteResource extends Resource
 {
@@ -151,8 +152,21 @@ class VisitanteResource extends Resource
             'edit' => Pages\EditVisitante::route('/{record}/edit'),
         ];
     }
+
+    public static function canViewAny(): bool
+    {
+        return Auth::user()->can('manage visitantes');
+    }
+
+    public static function canCreate(): bool
+    {
+        return Auth::user()->can('manage visitantes');
+    }
+
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()->with('user');
     }
+
+
 }

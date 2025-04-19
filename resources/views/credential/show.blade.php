@@ -1,19 +1,19 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-[#1B396A] leading-tight">
             {{ __('Mi Credencial Digital') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-blue-950 overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white dark:bg-[#1B396A] overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100 flex flex-col items-center">
 
                     {{-- Foto de Perfil --}}
                     <div class="mb-4">
                         @if ($user->ruta_foto_perfil)
-                            <img src="{{ asset('storage/' . $user->ruta_foto_perfil) }}" alt="Foto de perfil" class="w-32 h-32 rounded-lg object-cover border-4 border-indigo-300">
+                            <img src="{{ asset('storage/' . $user->ruta_foto_perfil) }}" alt="Foto de perfil" class="w-32 h-32 rounded-lg object-cover border-4 border-gray-300 dark:border-gray-400">
                         @else
                             <div class="w-32 h-32 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center border-4 border-indigo-300">
                                 <svg class="w-16 h-16 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
@@ -47,7 +47,7 @@
                                     }}
                                 </span>
                             </p>
-                            <p class="mt-2 px-3 py-1 inline-block bg-blue-100 text-blue-800 text-sm font-semibold rounded-xl dark:bg-white dark:text-blue-950">
+                            <p class="mt-2 px-3 py-1 inline-block bg-blue-100 text-blue-800 text-sm font-semibold rounded-xl dark:bg-gray-300 dark:text-blue-950">
                                 Estudiante
                             </p>
                         </div>
@@ -55,7 +55,7 @@
                         <div class="text-center mb-4 space-y-1">
                             <p> <span class="font-semibold">Código Visitante: </span> {{ $user->visitante->codigo_visitante }} </p>
                             <p> <span class="font-semibold">Institución: </span> {{ $user->visitante->institucion_origen }} </p>
-                            <p class="mt-2 px-3 py-1 inline-block bg-green-100 text-green-800 text-sm font-semibold rounded-full dark:bg-green-900 dark:text-green-300">
+                            <p class="mt-2 px-3 py-1 inline-block bg-blue-100 text-blue-800 text-sm font-semibold rounded-xl dark:bg-gray-300 dark:text-blue-950">
                                 Visitante
                             </p>
                         </div>
